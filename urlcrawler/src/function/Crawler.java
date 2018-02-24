@@ -1,6 +1,7 @@
 package function;
 
 
+import dao.UrlDao;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -13,14 +14,14 @@ import java.util.TreeSet;
 import java.util.regex.Pattern;
 
 
-public class Crawler {
-	private static Queue q1 = new Queue();
-	private static Queue q2 = new Queue();
-	private static Set<String> set = new TreeSet<String>();
-	private static int i = 0;
-	private static Pattern pattern = Pattern.compile("^/html/+(.)+.html");
-	private static Pattern pattern0 = Pattern.compile("http://www.dytt8.net/html/+(.)+.html");
-	private static Pattern pattern1 = Pattern.compile("^ftp://+((.)+)+");
+public class Crawler extends Thread{
+	private static volatile Queue q1 = new Queue();
+	private static volatile Queue q2 = new Queue();
+	private static volatile Set<String> set = new TreeSet<String>();
+	private static volatile int i = 0;
+	private static volatile Pattern pattern = Pattern.compile("^/html/+(.)+.html");
+	private static volatile Pattern pattern0 = Pattern.compile("http://www.dytt8.net/html/+(.)+.html");
+	private static volatile Pattern pattern1 = Pattern.compile("^ftp://+((.)+)+");
 
 	public static void main(String[] args) {
 		Document doc = null;
@@ -34,7 +35,6 @@ public class Crawler {
 						|| pattern0.matcher(linkHref).matches() == true) {
 					q1.insertQueue(linkHref);
 					q2.insertQueue(linkHref);
-//					System.out.println("http://www.dytt8.net" + linkHref+"=================");
 					open("http://www.dytt8.net" + q1.outQueue());
 				}
 			}
@@ -42,6 +42,12 @@ public class Crawler {
 			long end = System.currentTimeMillis();
 			System.out.println("用时" + (end - begin) + "ms");
 			System.out.println("一共" + set.size() + "条下载链接");
+			long b = System.currentTimeMillis();
+			for (String url : set) {
+				UrlDao.add(url);
+			}
+			long e = System.currentTimeMillis();
+			System.out.println("数据库用时"+(e-b)+"ms");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
