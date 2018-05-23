@@ -17,15 +17,14 @@
 ---
 
 ### 开发流程：
-* 通过浏览器分析网站的请求方式为get方式，所以在网址后面添加参数用户名和密码登录系统
+* 通过浏览器分析网站的请求方式为get方式，所以在网址后面添加参数用户名和密码登录系统  
 <code>http://60.219.165.24/loginAction.do?zjh=用户名&mm=密码</code>，实际通过用户自己输入用户名和密码实现。   
 * 创建URL对象，实际上可以理解为打开网址，获取连接  
 
-<code>
-
-        URL url = new URL(surl);    
+```
+    URL url = new URL(surl);   
     HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-</code>
+```
 
 * 通过浏览器的检查功能，在访问网址的时候，分析出需要获取cookie
 * 提取cookie，携带cookie参数访问指定的显示分数的网页
