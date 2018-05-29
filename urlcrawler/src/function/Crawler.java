@@ -7,6 +7,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import queue.Queue;
+import util.BloomFilter;
 
 import java.io.IOException;
 import java.util.Set;
@@ -34,7 +35,7 @@ public class Crawler extends Thread{
 				if (pattern.matcher(linkHref).matches() == true
 						|| pattern0.matcher(linkHref).matches() == true) {
 					q1.insertQueue(linkHref);
-					q2.insertQueue(linkHref);
+					BloomFilter.addValue(linkHref);
 					open("http://www.dytt8.net" + q1.outQueue());
 				}
 			}
@@ -63,8 +64,8 @@ public class Crawler extends Thread{
 				if (pattern.matcher(linkHref).matches() == true
 						|| pattern0.matcher(linkHref).matches() == true) {
 					q1.insertQueue(linkHref);
-					q2.insertQueue(linkHref);
-					if (q2.contains(linkHref) == false) {
+					BloomFilter.addValue(linkHref);
+					if (BloomFilter.contains(linkHref) == false) {
 						open("http://www.dytt8.net" + q1.outQueue());
 					}
 				} else if (pattern1.matcher(linkHref).matches() == true) {
